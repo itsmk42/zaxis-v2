@@ -5,7 +5,7 @@ import { Plus, Package, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { prisma } from "@/lib/prisma";
-import { formatINR } from "@/lib/format";
+import { formatPrice } from "@/lib/format";
 import { DeleteProductButton } from "@/components/admin/delete-product-button";
 
 // ============================================
@@ -139,7 +139,7 @@ export default async function ProductsPage() {
                     </span>
                   </td>
                   <td className="px-6 py-4 text-white">
-                    {formatINR(Number(product.basePrice))}
+                    {formatPrice(Number(product.basePrice))}
                   </td>
                   <td className="px-6 py-4 text-white">
                     {product.productType === "STANDARD"

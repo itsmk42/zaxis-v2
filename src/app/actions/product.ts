@@ -96,7 +96,8 @@ export async function createProduct(
                 ...(data.requiresFileUpload
                   ? [
                     {
-                      name: "Photo Upload",
+                      name: "photo_upload",
+                      label: "Photo Upload",
                       inputType: "FILE_UPLOAD" as const,
                       isRequired: true,
                       position: 0,
@@ -106,7 +107,8 @@ export async function createProduct(
                 ...(data.requiresTextInput
                   ? [
                     {
-                      name: data.textInputLabel || "Custom Text",
+                      name: "custom_text",
+                      label: data.textInputLabel || "Custom Text",
                       inputType: "TEXT_INPUT" as const,
                       isRequired: true,
                       placeholder: data.textInputPlaceholder || "",
