@@ -1,0 +1,14 @@
+import { createRouteHandler } from "uploadthing/next";
+import { ourFileRouter } from "./core";
+
+// Export routes for Next.js App Router
+export const { GET, POST } = createRouteHandler({
+  router: ourFileRouter,
+  
+  // Apply an optional config
+  config: {
+    // Optional: Add callback URL for webhooks
+    // callbackUrl: process.env.UPLOADTHING_CALLBACK_URL,
+  },
+});
+

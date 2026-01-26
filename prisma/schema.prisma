@@ -1,0 +1,456 @@
+// Z Axis Studio - Hybrid E-commerce Schema
+// Handles: Standard Inventory + Custom 3D Print Services
+// GST Compliant for India (Mangaluru)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// ENUMS
+// ============================================
+
+enum ProductType {
+  STANDARD  // Ready-made inventory items (lamps, figurines)
+  CUSTOM    // Requires user customization (lithophanes, keychains)
+}
+
+enum CustomizationInputType {
+  TEXT_INPUT    // For custom text (e.g., name on keychain)
+  FILE_UPLOAD   // For image uploads (e.g., lithophane photo)
+  COLOR_SELECT  // For color choices
+  SIZE_SELECT   // For size variations
+}
+
+enum OrderStatus {
+  PENDING           // Order placed, awaiting payment
+  PAYMENT_CONFIRMED // Payment received
+  PROCESSING        // Being 3D printed/prepared
+  QUALITY_CHECK     // Post-print quality verification
+  READY_TO_SHIP     // Packaged and ready
+  SHIPPED           // Handed to courier
+  DELIVERED         // Customer received
+  CANCELLED         // Order cancelled
+  REFUNDED          // Payment refunded
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+// ============================================
+// USER & AUTH
+// ============================================
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  phone         String?   // Important for Indian delivery
+  emailVerified DateTime?
+  image         String?
+
+  addresses     Address[]
+  orders        Order[]
+  reviews       Review[]
+  cart          CartItem[]
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Address {
+  id           String  @id @default(cuid())
+  userId       String
+  user         User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  label        String? // "Home", "Office", etc.
+  fullName     String
+  phone        String
+  addressLine1 String
+  addressLine2 String?
+  landmark     String? // Common in Indian addresses
+  city         String
+  state        String
+  pincode      String  // Indian postal code (6 digits)
+  isDefault    Boolean @default(false)
+
+  orders       Order[]
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([userId])
+}
+
+// ============================================
+// PRODUCTS - HYBRID MODEL
+// ============================================
+
+model Category {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  description String?
+  image       String?
+  parentId    String?
+  parent      Category? @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children    Category[] @relation("CategoryHierarchy")
+
+  products    Product[]
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Product {
+  id              String      @id @default(cuid())
+  name            String
+  slug            String      @unique
+  description     String
+  shortDescription String?
+
+  // HYBRID PRODUCT TYPE - Core differentiator
+  productType     ProductType @default(STANDARD)
+
+  // Pricing
+  basePrice       Decimal     @db.Decimal(10, 2) // Base price in INR
+  compareAtPrice  Decimal?    @db.Decimal(10, 2) // Original price for discounts
+  costPrice       Decimal?    @db.Decimal(10, 2) // For profit calculation
+
+  // GST Configuration
+  hsnCode         String?     // Harmonized System Nomenclature code
+  gstRate         Decimal     @default(18) @db.Decimal(4, 2) // GST percentage (5, 12, 18, 28)
+
+  // Inventory (for STANDARD products)
+  trackInventory  Boolean     @default(true)
+  quantity        Int         @default(0)
+  lowStockThreshold Int       @default(5)
+
+  // Production (for CUSTOM products)
+  basePrintTimeMinutes Int?   // Estimated print time
+  materialType    String?     // PLA, PETG, Resin, etc.
+
+  // Media
+  images          ProductImage[]
+  modelFile       String?     // 3D model file URL (for internal use)
+
+  // Relations
+  categoryId      String?
+  category        Category?   @relation(fields: [categoryId], references: [id])
+
+  customizationAttributes CustomizationAttribute[]
+  orderItems      OrderItem[]
+  cartItems       CartItem[]
+  reviews         Review[]
+
+  // Status
+  isActive        Boolean     @default(true)
+  isFeatured      Boolean     @default(false)
+
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  @@index([categoryId])
+  @@index([productType])
+  @@index([slug])
+}
+
+model ProductImage {
+  id        String  @id @default(cuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  url       String
+  alt       String?
+  position  Int     @default(0) // For ordering
+
+  @@index([productId])
+}
+
+// ============================================
+// CUSTOMIZATION SYSTEM - For CUSTOM Products
+// ============================================
+
+model CustomizationAttribute {
+  id          String                 @id @default(cuid())
+  productId   String
+  product     Product                @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  name        String                 // "Your Photo", "Custom Text", "Size"
+  label       String                 // Display label for customers
+  inputType   CustomizationInputType
+  isRequired  Boolean                @default(true)
+  position    Int                    @default(0) // Order of appearance
+
+  // Validation rules (JSON for flexibility)
+  // For TEXT_INPUT: { minLength, maxLength, pattern }
+  // For FILE_UPLOAD: { maxSizeMB, allowedTypes: ["image/jpeg", "image/png"] }
+  // For SELECT types: { options: [{value, label, priceModifier}] }
+  validationRules Json?
+
+  // Price modification
+  additionalPrice Decimal?           @db.Decimal(10, 2) // Extra cost for this customization
+
+  // Placeholder/help text
+  placeholder  String?
+  helpText     String?
+
+  createdAt    DateTime              @default(now())
+  updatedAt    DateTime              @updatedAt
+
+  @@index([productId])
+}
+
+// ============================================
+// CART
+// ============================================
+
+model CartItem {
+  id        String  @id @default(cuid())
+  userId    String
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  quantity  Int     @default(1)
+
+  // Store customization values for CUSTOM products
+  // { attributeId: value } where value can be text or file URL
+  customizations Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, productId, customizations]) // Prevent duplicate items with same customizations
+  @@index([userId])
+}
+
+
+// ============================================
+// ORDERS - GST COMPLIANT FOR INDIA
+// ============================================
+
+model Order {
+  id              String        @id @default(cuid())
+  orderNumber     String        @unique // Human-readable: ZA-20240115-001
+
+  userId          String
+  user            User          @relation(fields: [userId], references: [id])
+
+  // Shipping Address (snapshot at order time)
+  shippingAddressId String?
+  shippingAddress   Address?    @relation(fields: [shippingAddressId], references: [id])
+
+  // Denormalized address fields (in case address is deleted)
+  shippingName    String
+  shippingPhone   String
+  shippingLine1   String
+  shippingLine2   String?
+  shippingLandmark String?
+  shippingCity    String
+  shippingState   String
+  shippingPincode String
+
+  // Order Items
+  items           OrderItem[]
+
+  // ============================================
+  // PRICING & GST BREAKDOWN (All in INR)
+  // ============================================
+
+  subtotal        Decimal       @db.Decimal(10, 2) // Sum of item totals before tax
+
+  // GST Breakdown - Critical for Indian compliance
+  // CGST + SGST for intra-state (within Karnataka)
+  // IGST for inter-state (outside Karnataka)
+  cgstAmount      Decimal       @default(0) @db.Decimal(10, 2) // Central GST
+  sgstAmount      Decimal       @default(0) @db.Decimal(10, 2) // State GST (Karnataka)
+  igstAmount      Decimal       @default(0) @db.Decimal(10, 2) // Integrated GST
+
+  totalGst        Decimal       @db.Decimal(10, 2) // Total GST amount
+
+  // Shipping
+  shippingCost    Decimal       @default(0) @db.Decimal(10, 2)
+  shippingGst     Decimal       @default(0) @db.Decimal(10, 2) // GST on shipping (18%)
+
+  // Discounts
+  discountCode    String?
+  discountAmount  Decimal       @default(0) @db.Decimal(10, 2)
+
+  // Final Amount
+  grandTotal      Decimal       @db.Decimal(10, 2) // Final payable amount
+
+  // ============================================
+  // GST INVOICE DETAILS
+  // ============================================
+
+  // Seller GSTIN (Z Axis Studio)
+  sellerGstin     String        @default("29XXXXX1234X1Z5") // Karnataka GSTIN
+
+  // Buyer GSTIN (optional - for B2B orders)
+  buyerGstin      String?
+
+  // Place of Supply (State code for GST)
+  placeOfSupply   String        // State code (29 for Karnataka)
+  isInterState    Boolean       @default(false) // true = IGST, false = CGST+SGST
+
+  // Invoice
+  invoiceNumber   String?       @unique // GST Invoice number
+  invoiceDate     DateTime?
+  invoiceUrl      String?       // PDF invoice URL
+
+  // ============================================
+  // STATUS & TRACKING
+  // ============================================
+
+  status          OrderStatus   @default(PENDING)
+  paymentStatus   PaymentStatus @default(PENDING)
+
+  // Stripe
+  stripePaymentIntentId String? @unique
+  stripeSessionId       String?
+
+  // Shipping/Tracking
+  courierName     String?       // Delhivery, BlueDart, etc.
+  trackingNumber  String?
+  trackingUrl     String?
+
+  estimatedDelivery DateTime?
+  shippedAt       DateTime?
+  deliveredAt     DateTime?
+
+  // Notes
+  customerNote    String?       // Note from customer
+  internalNote    String?       // Internal notes
+
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([userId])
+  @@index([status])
+  @@index([orderNumber])
+  @@index([createdAt])
+}
+
+model OrderItem {
+  id          String  @id @default(cuid())
+  orderId     String
+  order       Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  productId   String
+  product     Product @relation(fields: [productId], references: [id])
+
+  // Snapshot of product at order time
+  productName String
+  productType ProductType
+  productSlug String
+  productImage String?
+
+  // Pricing
+  unitPrice   Decimal @db.Decimal(10, 2) // Price per unit at order time
+  quantity    Int
+
+  // Customization values (for CUSTOM products)
+  // Stores the actual values submitted by customer
+  // { attributeId: { name, inputType, value, fileUrl? } }
+  customizations Json?
+
+  // GST for this item
+  hsnCode     String?
+  gstRate     Decimal @db.Decimal(4, 2) // GST % at order time
+  gstAmount   Decimal @db.Decimal(10, 2) // Calculated GST
+
+  // Line total (unitPrice * quantity)
+  lineTotal   Decimal @db.Decimal(10, 2)
+
+  // Production tracking
+  printStatus String? // queued, printing, completed
+  printNotes  String?
+
+  createdAt   DateTime @default(now())
+
+  @@index([orderId])
+  @@index([productId])
+}
+
+// ============================================
+// REVIEWS
+// ============================================
+
+model Review {
+  id        String  @id @default(cuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  rating    Int     // 1-5
+  title     String?
+  comment   String?
+  images    String[] // Review images
+
+  isVerifiedPurchase Boolean @default(false)
+  isApproved Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([productId, userId]) // One review per product per user
+  @@index([productId])
+}
+
+// ============================================
+// BULK INQUIRIES - B2B Lead Capture
+// ============================================
+
+enum InquiryStatus {
+  NEW           // Just submitted
+  CONTACTED     // We've reached out
+  IN_PROGRESS   // Quote sent / negotiating
+  CONVERTED     // Became a customer
+  CLOSED        // No longer active
+}
+
+model BulkInquiry {
+  id              String        @id @default(cuid())
+
+  // Contact Details
+  name            String
+  companyName     String?
+  email           String?
+  whatsappNumber  String        // Primary contact method for India
+
+  // Project Specifications
+  serviceType     String        // batch_printing, prototyping, lithophanes, etc.
+  materialPreference String?
+  quantity        Int?
+  urgency         String?       // standard, rush, flexible
+
+  // Project Details
+  description     String        @db.Text
+
+  // Reference Files (stored as JSON array of URLs)
+  referenceFileUrls String[]
+
+  // Status Tracking
+  status          InquiryStatus @default(NEW)
+  notes           String?       @db.Text  // Internal notes
+  quotedAmount    Decimal?      @db.Decimal(10, 2)
+
+  // Metadata
+  quoteId         String?       @unique  // Reference ID shown to customer
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+}
