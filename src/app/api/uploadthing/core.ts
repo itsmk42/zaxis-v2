@@ -45,8 +45,8 @@ export const ourFileRouter = {
     .onUploadComplete(async ({ metadata, file }) => {
       console.log("Product image uploaded by:", metadata.userId);
       console.log("File URL:", file.url);
-      
-      return { 
+
+      return {
         uploadedBy: metadata.userId,
         url: file.url,
         name: file.name,
@@ -71,7 +71,7 @@ export const ourFileRouter = {
     .onUploadComplete(async ({ metadata, file }) => {
       console.log("3D model uploaded by:", metadata.userId);
       console.log("File URL:", file.url);
-      
+
       return {
         uploadedBy: metadata.userId,
         url: file.url,
@@ -86,7 +86,7 @@ export const ourFileRouter = {
   // ----------------------------------------
   customerUpload: f({
     image: {
-      maxFileSize: "10MB",
+      maxFileSize: "8MB",
       maxFileCount: 5,
     },
     blob: {
@@ -102,7 +102,7 @@ export const ourFileRouter = {
     .onUploadComplete(async ({ metadata, file }) => {
       console.log("Customer file uploaded at:", metadata.uploadedAt);
       console.log("File URL:", file.url);
-      
+
       return {
         url: file.url,
         name: file.name,
@@ -117,7 +117,7 @@ export const ourFileRouter = {
   // ----------------------------------------
   bulkQuoteUpload: f({
     image: {
-      maxFileSize: "10MB",
+      maxFileSize: "8MB",
       maxFileCount: 5,
     },
     blob: {
@@ -130,7 +130,7 @@ export const ourFileRouter = {
     })
     .onUploadComplete(async ({ metadata, file }) => {
       console.log("Bulk quote file uploaded at:", metadata.uploadedAt);
-      
+
       return {
         url: file.url,
         name: file.name,
