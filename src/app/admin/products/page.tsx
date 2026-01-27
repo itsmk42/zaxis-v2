@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import { Plus, Package, Search } from "lucide-react";
+import { Plus, Package, Search, Edit, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { prisma } from "@/lib/prisma";
@@ -157,10 +157,34 @@ export default async function ProductsPage() {
                     </span>
                   </td>
                   <td className="px-6 py-4 text-right">
-                    <DeleteProductButton
-                      productId={product.id}
-                      productName={product.name}
-                    />
+                    <div className="flex justify-end gap-2">
+                      <Button
+                        asChild
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 text-white/60 hover:bg-white/10 hover:text-white"
+                        title="View in Shop"
+                      >
+                        <Link href={`/shop/${product.slug}`} target="_blank">
+                          <Eye className="h-4 w-4" />
+                        </Link>
+                      </Button>
+                      <Button
+                        asChild
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 text-white/60 hover:bg-white/10 hover:text-white"
+                        title="Edit Product"
+                      >
+                        <Link href={`/admin/products/${product.id}`}>
+                          <Edit className="h-4 w-4" />
+                        </Link>
+                      </Button>
+                      <DeleteProductButton
+                        productId={product.id}
+                        productName={product.name}
+                      />
+                    </div>
                   </td>
                 </tr>
               ))}

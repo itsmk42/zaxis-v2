@@ -59,6 +59,11 @@ export async function createProduct(
       slug = `${slug}-${Date.now().toString(36)}`;
     }
 
+    // Find category
+    const category = await prisma.category.findUnique({
+      where: { slug: data.category },
+    });
+
     // Create the product
     const product = await prisma.product.create({
       data: {
@@ -67,6 +72,7 @@ export async function createProduct(
         description: data.description,
         shortDescription: data.shortDescription || null,
         productType: data.productType,
+        categoryId: category?.id || null,
         basePrice: data.basePrice,
         compareAtPrice: data.compareAtPrice || null,
         gstRate: parseFloat(data.gstRate),
@@ -78,16 +84,19 @@ export async function createProduct(
         materialType: data.materialType || null,
         isActive: data.isActive,
         isFeatured: data.isFeatured,
-        // Create main image if provided
-        images: data.mainImageUrl
-          ? {
-            create: {
-              url: data.mainImageUrl,
-              alt: data.name,
-              position: 0,
-            },
-          }
-          : undefined,
+        // Create images if provided
+        images: {
+          create: [
+            ...(data.mainImageUrl
+              ? [{ url: data.mainImageUrl, alt: data.name, position: 0 }]
+              : []),
+            ...(data.additionalImageUrls?.map((url, index) => ({
+              url,
+              alt: `${data.name} - ${index + 1}`,
+              position: index + 1,
+            })) || []),
+          ],
+        },
         // Create customization attributes for CUSTOM products
         customizationAttributes:
           data.productType === "CUSTOM"
@@ -158,6 +167,133 @@ export async function createProductAndRedirect(
 
   // If not successful, the error will be handled by the form
   throw new Error(result.message);
+}
+
+// ============================================
+// SERVER ACTION: Update Product
+// ============================================
+
+export async function updateProduct(
+  productId: string,
+  formData: ProductFormData
+): Promise<ProductActionResult> {
+  try {
+    // Validate the form data on the server
+    const validationResult = ProductSchema.safeParse(formData);
+
+    if (!validationResult.success) {
+      return {
+        success: false,
+        message: "Please check the form for errors",
+        errors: validationResult.error.flatten().fieldErrors as Record<string, string[]>,
+      };
+    }
+
+    const data = validationResult.data;
+
+    // Check if product exists
+    const existingProduct = await prisma.product.findUnique({
+      where: { id: productId },
+      include: { images: true, customizationAttributes: true },
+    });
+
+    if (!existingProduct) {
+      return {
+        success: false,
+        message: "Product not found",
+      };
+    }
+
+    // Update the product
+    const product = await prisma.product.update({
+      where: { id: productId },
+      data: {
+        name: data.name,
+        description: data.description,
+        shortDescription: data.shortDescription || null,
+        productType: data.productType,
+        basePrice: data.basePrice,
+        compareAtPrice: data.compareAtPrice || null,
+        gstRate: parseFloat(data.gstRate),
+        hsnCode: data.hsnCode || null,
+        trackInventory: data.productType === "STANDARD" ? data.trackInventory : false,
+        quantity: data.productType === "STANDARD" ? data.quantity : 0,
+        lowStockThreshold: data.lowStockThreshold,
+        materialType: data.materialType || null,
+        isActive: data.isActive,
+        isFeatured: data.isFeatured,
+        categoryId: (await prisma.category.findUnique({ where: { slug: data.category } }))?.id || null,
+        // Handling images: Replace all images with the new set
+        images: {
+          deleteMany: {},
+          create: [
+            ...(data.mainImageUrl
+              ? [{ url: data.mainImageUrl, alt: data.name, position: 0 }]
+              : []),
+            ...(data.additionalImageUrls?.map((url, index) => ({
+              url,
+              alt: `${data.name} - ${index + 1}`,
+              position: index + 1,
+            })) || []),
+          ],
+        },
+        // Updating customization attributes
+        customizationAttributes:
+          data.productType === "CUSTOM"
+            ? {
+              deleteMany: {}, // Clean slate for simplicity in attributes
+              create: [
+                ...(data.requiresFileUpload
+                  ? [
+                    {
+                      name: "photo_upload",
+                      label: "Photo Upload",
+                      inputType: "FILE_UPLOAD" as const,
+                      isRequired: true,
+                      position: 0,
+                    },
+                  ]
+                  : []),
+                ...(data.requiresTextInput
+                  ? [
+                    {
+                      name: "custom_text",
+                      label: data.textInputLabel || "Custom Text",
+                      inputType: "TEXT_INPUT" as const,
+                      isRequired: true,
+                      placeholder: data.textInputPlaceholder || "",
+                      position: 1,
+                    },
+                  ]
+                  : []),
+              ],
+            }
+            : {
+              deleteMany: {}, // Remove if product type changed to STANDARD
+            },
+      },
+    });
+
+    console.log("Product updated:", product.id, product.name);
+
+    // Revalidate the products pages
+    revalidatePath("/admin/products");
+    revalidatePath(`/shop/${product.slug}`);
+    revalidatePath("/shop");
+
+    return {
+      success: true,
+      message: "Product updated successfully!",
+      productId: product.id,
+    };
+  } catch (error) {
+    console.error("Update product error:", error);
+
+    return {
+      success: false,
+      message: "Failed to update product. Please try again.",
+    };
+  }
 }
 
 // ============================================

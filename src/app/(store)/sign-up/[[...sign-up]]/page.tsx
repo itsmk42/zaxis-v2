@@ -1,9 +1,10 @@
-import { SignIn } from "@clerk/nextjs";
+import { SignUp } from "@clerk/nextjs";
 
 export default function Page() {
     return (
         <div className="flex min-h-screen items-center justify-center bg-black py-20">
-            <SignIn
+            <SignUp
+                path="/sign-up"
                 appearance={{
                     elements: {
                         formButtonPrimary: "bg-white text-black hover:bg-white/90",
@@ -16,9 +17,7 @@ export default function Page() {
                         formFieldLabel: "text-white/60",
                         formFieldInput: "bg-white/5 border border-white/10 text-white",
                         footerActionText: "text-white/40",
-                        footerActionLink: "text-white hover:text-white/80",
-                        identityPreviewText: "text-white",
-                        identityPreviewEditButtonIcon: "text-white/60"
+                        footerActionLink: "text-white hover:text-white/80"
                     }
                 }}
             />

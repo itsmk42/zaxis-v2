@@ -2,8 +2,8 @@ import { CheckoutForm } from "@/components/checkout/checkout-form";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
-export default function CheckoutPage() {
-    const { userId } = auth();
+export default async function CheckoutPage() {
+    const { userId } = await auth();
 
     if (!userId) {
         redirect("/sign-in?redirect_url=/checkout");

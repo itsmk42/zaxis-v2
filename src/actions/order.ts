@@ -9,35 +9,52 @@ import { z } from "zod";
 
 // Helper to calculate totals (simplified logic - mirroring cart)
 // Ideally this should reuse a shared calculation utility
-async function calculateCartTotal(userId: string) {
-    const cartItems = await prisma.cartItem.findMany({
-        where: { userId },
-        include: { product: true }
-    });
-
-    if (!cartItems.length) return null;
-
-    let subtotal = 0;
-
-    // In a real app, you'd verify prices again here
-    cartItems.forEach(item => {
-        // Handle potentially different prices (sale vs regular)
-        const price = item.product.compareAtPrice && Number(item.product.compareAtPrice) < Number(item.product.basePrice)
-            ? Number(item.product.compareAtPrice)
-            : Number(item.product.basePrice);
-        subtotal += price * item.quantity;
-    });
-
-    const gstRate = 0.18; // 18% Standard
-    const gstAmount = subtotal * gstRate;
-    const shippingCost = subtotal > 1000 ? 0 : 100; // Free shipping over 1000
-    const grandTotal = subtotal + gstAmount + shippingCost;
-
-    return { subtotal, gstAmount, shippingCost, grandTotal, cartItems };
+// Minimized type definition to avoid circular deps
+interface CartItemPayload {
+    productId: string;
+    quantity: number;
+    productName?: string; // Optional context
 }
 
-export async function createOrder(data: z.infer<typeof checkoutSchema>) {
-    const { userId } = auth();
+async function calculateTotalFromItems(items: CartItemPayload[]) {
+    if (!items.length) return null;
+
+    // Fetch products from DB to get authoritative prices
+    const productIds = items.map(i => i.productId);
+    const products = await prisma.product.findMany({
+        where: { id: { in: productIds } }
+    });
+
+    let subtotal = 0;
+    const verifiedItems = [];
+
+    for (const item of items) {
+        const product = products.find(p => p.id === item.productId);
+        if (!product) continue; // Skip invalid items
+
+        const price = product.compareAtPrice && Number(product.compareAtPrice) < Number(product.basePrice)
+            ? Number(product.compareAtPrice)
+            : Number(product.basePrice);
+
+        subtotal += price * item.quantity;
+
+        verifiedItems.push({
+            ...item,
+            product,
+            price
+        });
+    }
+
+    const gstRate = 0.18;
+    const gstAmount = subtotal * gstRate;
+    const shippingCost = subtotal > 1000 ? 0 : 100;
+    const grandTotal = subtotal + gstAmount + shippingCost;
+
+    return { subtotal, gstAmount, shippingCost, grandTotal, items: verifiedItems };
+}
+
+export async function createOrder(data: z.infer<typeof checkoutSchema>, clientItems: CartItemPayload[]) {
+    const { userId } = await auth();
     if (!userId) {
         throw new Error("You must be logged in to place an order.");
     }
@@ -55,10 +72,30 @@ export async function createOrder(data: z.infer<typeof checkoutSchema>) {
     } = result.data;
 
     try {
-        // 1. Get Cart Logic
-        const cartData = await calculateCartTotal(userId);
-        if (!cartData) {
-            return { error: "Your cart is empty" };
+        // 0. Ensure User Exists (Sync Clerk User to DB)
+        // This solves the foreign key constraint error P2003
+        await prisma.user.upsert({
+            where: { id: userId },
+            update: {
+                name: fullName,
+                phone: phone,
+                // We typically don't update email blindly as it's sensitive, 
+                // but for this MVP sync it helps if the user changed it in Clerk but not here.
+                // However, if email causes conflict, we might want to skip.
+                // For now, let's just make sure the ID exists.
+            },
+            create: {
+                id: userId,
+                email: email,
+                name: fullName,
+                phone: phone
+            }
+        });
+
+        // 1. Calculate Totals from passed items
+        const cartData = await calculateTotalFromItems(clientItems);
+        if (!cartData || cartData.items.length === 0) {
+            return { error: "Your cart is empty or contains invalid items" };
         }
 
         // 2. Create Order
@@ -67,7 +104,7 @@ export async function createOrder(data: z.infer<typeof checkoutSchema>) {
         const count = await prisma.order.count();
         const orderNumber = `ZA-${dateStr}-${(count + 1).toString().padStart(4, "0")}`;
 
-        const order = await prisma.order.create({
+        await prisma.order.create({
             data: {
                 orderNumber,
                 userId,
@@ -95,33 +132,30 @@ export async function createOrder(data: z.infer<typeof checkoutSchema>) {
 
                 // Items
                 items: {
-                    create: cartData.cartItems.map(item => ({
+                    create: cartData.items.map(item => ({
                         productId: item.productId,
                         productName: item.product.name,
                         productType: item.product.productType,
                         productSlug: item.product.slug,
                         productImage: "", // Ideally fetch the first image
-                        unitPrice: item.product.basePrice, // Should verify price
+                        unitPrice: item.price, // Should verify price
                         quantity: item.quantity,
-                        lineTotal: Number(item.product.basePrice) * item.quantity,
+                        lineTotal: Number(item.price) * item.quantity,
                         gstRate: 18,
-                        gstAmount: (Number(item.product.basePrice) * item.quantity) * 0.18,
+                        gstAmount: (Number(item.price) * item.quantity) * 0.18,
                     }))
                 }
             }
         });
 
         // 3. Clear Cart
-        await prisma.cartItem.deleteMany({
-            where: { userId }
-        });
+        // Note: Client side must also clear. We'll return success to trigger that.
 
-        // 4. Redirect
-        // Note: In server actions, redirect throws an error, so do it last or catch it
     } catch (error) {
         console.error("Order creation failed:", error);
         return { error: "Something went wrong while creating your order." };
     }
 
-    redirect("/checkout/success");
+    // Allow client to redirect
+    return { success: true };
 }

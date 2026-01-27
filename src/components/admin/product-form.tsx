@@ -1,5 +1,6 @@
 "use client";
 
+import * as React from "react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -20,8 +21,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectOption } from "@/components/ui/select";
-import { SingleImageUpload } from "@/components/ui/file-upload";
+import { SingleImageUpload, FileUpload, type UploadedFile } from "@/components/ui/file-upload";
 import { cn } from "@/lib/utils";
 import {
   ProductSchema,
@@ -31,7 +31,31 @@ import {
   GST_RATES,
   MATERIAL_TYPES,
 } from "@/lib/validations/product";
-import { createProduct, type ProductActionResult } from "@/app/actions/product";
+import { createProduct, updateProduct, type ProductActionResult } from "@/app/actions/product";
+
+// Local simple Select components since the UI one is Radix-based and the form uses HTML select behavior
+const Select = React.forwardRef<HTMLSelectElement, any>(
+  ({ className, error, children, ...props }, ref) => (
+    <select
+      ref={ref}
+      className={cn(
+        "flex h-10 w-full rounded-md border border-white/20 bg-white/5 px-3 py-2 text-sm text-white focus:border-white/40 focus:outline-none focus:ring-2 focus:ring-white/20 disabled:cursor-not-allowed disabled:opacity-50",
+        error && "border-red-400/50 focus:ring-red-400/20",
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </select>
+  )
+);
+Select.displayName = "Select";
+
+const SelectOption = ({ children, ...props }: any) => (
+  <option className="bg-zinc-900 text-white" {...props}>
+    {children}
+  </option>
+);
 
 // ============================================
 // STYLES
@@ -45,7 +69,12 @@ const errorStyles = "border-red-400/50 focus:ring-red-400/20";
 // PRODUCT FORM COMPONENT
 // ============================================
 
-export function ProductForm() {
+interface ProductFormProps {
+  initialData?: ProductFormData;
+  productId?: string;
+}
+
+export function ProductForm({ initialData, productId }: ProductFormProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [result, setResult] = useState<ProductActionResult | null>(null);
@@ -58,7 +87,7 @@ export function ProductForm() {
     setValue,
   } = useForm<ProductFormData>({
     resolver: zodResolver(ProductSchema),
-    defaultValues: {
+    defaultValues: initialData || {
       productType: "STANDARD",
       gstRate: "18",
       trackInventory: true,
@@ -75,13 +104,21 @@ export function ProductForm() {
   const requiresFileUpload = watch("requiresFileUpload");
   const requiresTextInput = watch("requiresTextInput");
   const mainImageUrl = watch("mainImageUrl");
+  const additionalImageUrls = watch("additionalImageUrls") || [];
 
   const onSubmit = async (data: ProductFormData) => {
     setIsSubmitting(true);
     setResult(null);
 
     try {
-      const response = await createProduct(data);
+      let response: ProductActionResult;
+
+      if (productId) {
+        response = await updateProduct(productId, data);
+      } else {
+        response = await createProduct(data);
+      }
+
       setResult(response);
 
       if (response.success) {
@@ -314,21 +351,38 @@ export function ProductForm() {
         </FormField>
       </FormSection>
 
-      {/* Product Image */}
-      <FormSection title="Product Image" icon={ImageIcon}>
-        <FormField
-          label="Main Product Image"
-          error={errors.mainImageUrl?.message}
-          hint="Upload a high-quality product photo"
-        >
-          <SingleImageUpload
-            endpoint="productImage"
-            value={mainImageUrl}
-            onChange={(url) => setValue("mainImageUrl", url || "")}
-            label="Upload Product Image"
-            hint="Recommended: 1000x1000px, max 8MB"
-          />
-        </FormField>
+      {/* Product Images */}
+      <FormSection title="Product Images" icon={ImageIcon}>
+        <div className="space-y-6">
+          <FormField
+            label="Main Product Image"
+            error={errors.mainImageUrl?.message}
+            hint="The primary image shown in search results and product cards."
+          >
+            <SingleImageUpload
+              endpoint="productImage"
+              value={mainImageUrl}
+              onChange={(url) => setValue("mainImageUrl", url || "")}
+              label="Upload Main Image"
+              hint="Recommended: 1000x1000px, max 8MB"
+            />
+          </FormField>
+
+          <FormField
+            label="Additional Images"
+            error={errors.additionalImageUrls?.message}
+            hint="Upload up to 9 more images for the product gallery."
+          >
+            <FileUpload
+              endpoint="productImage"
+              value={additionalImageUrls.map(url => ({ url, name: "Product Image", size: 0 }))}
+              onChange={(files) => setValue("additionalImageUrls", files.map(f => f.url))}
+              maxFiles={9}
+              label="Add More Images"
+              hint="You can upload multiple gallery images at once."
+            />
+          </FormField>
+        </div>
       </FormSection>
 
       {/* Status */}
@@ -384,12 +438,12 @@ export function ProductForm() {
           {isSubmitting ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Creating...
+              {productId ? "Saving..." : "Creating..."}
             </>
           ) : (
             <>
               <Save className="mr-2 h-4 w-4" />
-              Create Product
+              {productId ? "Update Product" : "Create Product"}
             </>
           )}
         </Button>

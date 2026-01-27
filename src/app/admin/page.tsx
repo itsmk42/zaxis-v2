@@ -8,12 +8,47 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { prisma } from "@/lib/db";
+import { formatPrice } from "@/lib/format";
 
 // ============================================
 // ADMIN OVERVIEW PAGE
 // ============================================
 
-export default function AdminOverviewPage() {
+export default async function AdminOverviewPage() {
+  // 1. Fetch Stats
+  const totalProducts = await prisma.product.count({
+    where: { isActive: true },
+  });
+
+  const pendingOrders = await prisma.order.count({
+    where: {
+      status: {
+        in: ["PENDING", "PENDING_COD", "PENDING_VERIFICATION", "PROCESSING"],
+      },
+    },
+  });
+
+  const newInquiries = await prisma.bulkInquiry.count({
+    where: { status: "NEW" },
+  });
+
+  // Calculate Revenue (Month to Date)
+  const now = new Date();
+  const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+
+  const revenueAggregation = await prisma.order.aggregate({
+    _sum: {
+      grandTotal: true,
+    },
+    where: {
+      createdAt: { gte: firstDayOfMonth },
+      status: { notIn: ["CANCELLED", "REFUNDED", "PENDING"] }, // Assume valid revenue if not cancelled/pending payment
+    },
+  });
+
+  const mtdRevenue = Number(revenueAggregation._sum.grandTotal || 0);
+
   return (
     <div className="space-y-8">
       {/* Header */}
@@ -35,27 +70,27 @@ export default function AdminOverviewPage() {
       {/* Stats Grid */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         <StatCard
-          title="Total Products"
-          value="0"
-          change="+0 this week"
+          title="Active Products"
+          value={totalProducts.toString()}
+          change="In catalog"
           icon={Package}
         />
         <StatCard
           title="Pending Orders"
-          value="0"
-          change="0 need attention"
+          value={pendingOrders.toString()}
+          change="Needs attention"
           icon={ShoppingCart}
         />
         <StatCard
-          title="Bulk Inquiries"
-          value="0"
-          change="0 unread"
+          title="New Inquiries"
+          value={newInquiries.toString()}
+          change="Unread bulk requests"
           icon={FileText}
         />
         <StatCard
           title="Revenue (MTD)"
-          value="₹0"
-          change="+0% from last month"
+          value={formatPrice(mtdRevenue)}
+          change="This Month"
           icon={TrendingUp}
         />
       </div>

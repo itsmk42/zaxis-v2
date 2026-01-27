@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Search, ShoppingCart, Menu, X, User } from "lucide-react";
+import { Search, ShoppingCart, Menu, X, User, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CartSheet } from "@/components/cart/cart-sheet";
 import { useCart } from "@/hooks/use-cart";
@@ -62,22 +62,7 @@ export function Navbar() {
               </Button>
 
               {/* Cart Sheet */}
-              <CartSheet>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="relative text-white/70 hover:bg-white/10 hover:text-white"
-                  aria-label="Shopping Cart"
-                >
-                  <ShoppingCart className="h-5 w-5" />
-                  {/* Cart Badge */}
-                  {itemCount > 0 && (
-                    <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-white text-[10px] font-bold text-black">
-                      {itemCount > 99 ? "99+" : itemCount}
-                    </span>
-                  )}
-                </Button>
-              </CartSheet>
+              <CartSheet />
 
               {/* Account Section */}
               <div className="flex items-center ml-2 border-l border-white/10 pl-4">
@@ -92,18 +77,22 @@ export function Navbar() {
                         userButtonPopoverFooter: "hidden"
                       }
                     }}
-                  />
+                  >
+                    <UserButton.MenuItems>
+                      <UserButton.Link
+                        label="My Orders"
+                        labelIcon={<Package className="h-4 w-4" />}
+                        href="/account"
+                      />
+                    </UserButton.MenuItems>
+                  </UserButton>
                 </SignedIn>
                 <SignedOut>
                   <SignInButton mode="modal">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="text-white/70 hover:bg-white/10 hover:text-white gap-2"
-                    >
+                    <span className="flex cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-white/70 transition-colors hover:bg-white/10 hover:text-white">
                       <User className="h-4 w-4" />
                       <span className="hidden sm:inline">Login</span>
-                    </Button>
+                    </span>
                   </SignInButton>
                 </SignedOut>
               </div>

@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useState, useEffect } from "react";
 import { ShoppingCart, Minus, Plus, Trash2, FileImage, Type } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -25,6 +26,11 @@ interface CartSheetProps {
 
 export function CartSheet({ children }: CartSheetProps) {
   const { items, removeItem, updateQuantity, getItemCount, getSubtotal } = useCart();
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const itemCount = getItemCount();
   const subtotal = getSubtotal();
@@ -34,19 +40,17 @@ export function CartSheet({ children }: CartSheetProps) {
     <Sheet>
       <SheetTrigger asChild>
         {children || (
-          <Button
-            variant="ghost"
-            size="icon"
-            className="relative text-white/70 hover:bg-white/10 hover:text-white"
+          <button
+            className="group relative inline-flex h-10 w-10 items-center justify-center rounded-md text-white/70 hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
             aria-label="Shopping Cart"
           >
             <ShoppingCart className="h-5 w-5" />
-            {itemCount > 0 && (
+            {isMounted && itemCount > 0 && (
               <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-white text-[10px] font-bold text-black">
                 {itemCount > 99 ? "99+" : itemCount}
               </span>
             )}
-          </Button>
+          </button>
         )}
       </SheetTrigger>
 

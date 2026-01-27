@@ -461,3 +461,17 @@ model BulkInquiry {
   @@index([status])
   @@index([createdAt])
 }
+
+// ============================================
+// STORE CONFIGURATION (Singleton)
+// ============================================
+
+model StoreSettings {
+  id            Int     @id @default(1)
+  upiId         String  @default("yourname@oksbi")
+  deliveryFee   Int     @default(0)
+  isStoreOpen   Boolean @default(true)
+  bannerMessage String?
+
+  updatedAt     DateTime @updatedAt
+}

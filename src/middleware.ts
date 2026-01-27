@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 
 const isAdminRoute = createRouteMatcher(["/admin(.*)"]);
 const isAccountRoute = createRouteMatcher(["/account(.*)"]);
+const isCheckoutRoute = createRouteMatcher(["/checkout(.*)"]);
 
 export default clerkMiddleware(async (auth, req) => {
     const { userId } = await auth();
@@ -20,7 +21,7 @@ export default clerkMiddleware(async (auth, req) => {
     }
 
     // 2. Handle Account Routes
-    if (isAccountRoute(req)) {
+    if (isAccountRoute(req) || isCheckoutRoute(req)) {
         if (!userId) {
             return (await auth()).redirectToSignIn();
         }
