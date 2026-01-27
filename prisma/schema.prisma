@@ -30,6 +30,8 @@ enum CustomizationInputType {
 
 enum OrderStatus {
   PENDING           // Order placed, awaiting payment
+  PENDING_COD       // COD Confirmed
+  PENDING_VERIFICATION // UPI waiting for check
   PAYMENT_CONFIRMED // Payment received
   PROCESSING        // Being 3D printed/prepared
   QUALITY_CHECK     // Post-print quality verification
@@ -315,6 +317,10 @@ model Order {
 
   status          OrderStatus   @default(PENDING)
   paymentStatus   PaymentStatus @default(PENDING)
+
+  // Payment Details
+  paymentMethod   String?       // "COD", "UPI"
+  transactionId   String?       // UPI Transaction ID
 
   // Stripe
   stripePaymentIntentId String? @unique
