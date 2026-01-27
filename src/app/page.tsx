@@ -43,7 +43,7 @@ export default function HomePage() {
         </div>
 
         {/* Hero Content */}
-        <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-6 text-center">
+        <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-4 py-8 text-center md:px-12 md:py-24">
           {/* Badge */}
           <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 backdrop-blur-sm">
             <Sparkles className="h-4 w-4 text-amber-400" />
@@ -53,7 +53,7 @@ export default function HomePage() {
           </div>
 
           {/* Main Heading */}
-          <h1 className="max-w-4xl text-5xl font-bold tracking-tight text-white sm:text-6xl md:text-7xl lg:text-8xl">
+          <h1 className="max-w-4xl text-4xl font-bold tracking-tight text-white md:text-6xl lg:text-7xl">
             <span className="block">Z Axis</span>
             <span className="block bg-gradient-to-r from-white via-white to-white/60 bg-clip-text text-transparent">
               Studio

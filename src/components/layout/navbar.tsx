@@ -21,7 +21,7 @@ export function Navbar() {
   return (
     <header className="fixed top-0 left-0 right-0 z-50">
       <nav className="mx-4 mt-4 rounded-2xl border border-white/10 bg-black/60 backdrop-blur-xl">
-        <div className="mx-auto max-w-7xl px-6">
+        <div className="mx-auto max-w-7xl px-4">
           <div className="flex h-16 items-center justify-between">
             {/* Left: Logo */}
             <Link href="/" className="flex items-center">

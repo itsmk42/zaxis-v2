@@ -10,13 +10,13 @@ import { Separator } from "@/components/ui/separator";
 
 interface ProductPageProps {
   params: {
-    productId: string;
+    slug: string;
   };
 }
 
-async function getProduct(productId: string) {
+async function getProduct(slug: string) {
   const product = await prisma.product.findUnique({
-    where: { id: productId },
+    where: { slug: slug },
     include: {
       images: {
         orderBy: { position: "asc" },
@@ -50,7 +50,7 @@ async function getProduct(productId: string) {
 }
 
 export async function generateMetadata({ params }: ProductPageProps) {
-  const product = await getProduct(params.productId);
+  const product = await getProduct(params.slug);
 
   if (!product) {
     return { title: "Product Not Found | Z Axis Studio" };
@@ -63,7 +63,7 @@ export async function generateMetadata({ params }: ProductPageProps) {
 }
 
 export default async function ProductPage({ params }: ProductPageProps) {
-  const product = await getProduct(params.productId);
+  const product = await getProduct(params.slug);
 
   if (!product) {
     notFound();
