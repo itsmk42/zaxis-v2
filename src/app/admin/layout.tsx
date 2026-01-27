@@ -10,6 +10,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { checkAdmin } from "@/lib/check-admin";
 
 // ============================================
 // METADATA
@@ -63,11 +64,13 @@ const NAV_ITEMS = [
 //   redirect('/login');
 // }
 
-export default function AdminLayout({
+export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  await checkAdmin();
+
   return (
     <div className="flex min-h-screen bg-zinc-950">
       {/* Fixed Sidebar */}

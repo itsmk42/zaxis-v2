@@ -15,6 +15,7 @@
     "db:studio": "prisma studio"
   },
   "dependencies": {
+    "@clerk/nextjs": "^6.36.10",
     "@hookform/resolvers": "^3.3.4",
     "@prisma/client": "^5.9.1",
     "@radix-ui/react-dialog": "^1.0.5",
@@ -27,7 +28,7 @@
     "clsx": "^2.1.0",
     "date-fns": "^3.3.1",
     "lucide-react": "^0.323.0",
-    "next": "14.1.0",
+    "next": "^14.2.24",
     "razorpay": "^2.9.4",
     "react": "^18",
     "react-dom": "^18",
