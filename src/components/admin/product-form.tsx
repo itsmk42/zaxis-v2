@@ -34,7 +34,7 @@ import {
 import { createProduct, updateProduct, type ProductActionResult } from "@/app/actions/product";
 
 // Local simple Select components since the UI one is Radix-based and the form uses HTML select behavior
-const Select = React.forwardRef<HTMLSelectElement, any>(
+export const Select = React.forwardRef<HTMLSelectElement, any>(
   ({ className, error, children, ...props }, ref) => (
     <select
       ref={ref}
@@ -51,7 +51,7 @@ const Select = React.forwardRef<HTMLSelectElement, any>(
 );
 Select.displayName = "Select";
 
-const SelectOption = ({ children, ...props }: any) => (
+export const SelectOption = ({ children, ...props }: any) => (
   <option className="bg-zinc-900 text-white" {...props}>
     {children}
   </option>

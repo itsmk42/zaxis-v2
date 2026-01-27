@@ -26,7 +26,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectOption } from "@/components/ui/select";
+import { Select, SelectOption } from "@/components/admin/product-form";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import {
