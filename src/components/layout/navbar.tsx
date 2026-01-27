@@ -2,10 +2,16 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Search, ShoppingCart, Menu, X } from "lucide-react";
+import { Search, ShoppingCart, Menu, X, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CartSheet } from "@/components/cart/cart-sheet";
 import { useCart } from "@/hooks/use-cart";
+import {
+  UserButton,
+  SignInButton,
+  SignedIn,
+  SignedOut
+} from "@clerk/nextjs";
 
 const navLinks = [
   { href: "/shop", label: "Shop" },
@@ -72,6 +78,35 @@ export function Navbar() {
                   )}
                 </Button>
               </CartSheet>
+
+              {/* Account Section */}
+              <div className="flex items-center ml-2 border-l border-white/10 pl-4">
+                <SignedIn>
+                  <UserButton
+                    afterSignOutUrl="/"
+                    appearance={{
+                      elements: {
+                        userButtonAvatarBox: "h-8 w-8",
+                        userButtonPopoverCard: "bg-zinc-900 border border-white/10",
+                        userButtonPopoverActionButtonText: "text-white",
+                        userButtonPopoverFooter: "hidden"
+                      }
+                    }}
+                  />
+                </SignedIn>
+                <SignedOut>
+                  <SignInButton mode="modal">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-white/70 hover:bg-white/10 hover:text-white gap-2"
+                    >
+                      <User className="h-4 w-4" />
+                      <span className="hidden sm:inline">Login</span>
+                    </Button>
+                  </SignInButton>
+                </SignedOut>
+              </div>
 
               {/* Mobile Menu Button */}
               <Button
