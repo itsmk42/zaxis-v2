@@ -1,129 +1,130 @@
 import Link from "next/link";
-import { Mail, MapPin, Printer } from "lucide-react";
+import { Mail, MapPin, Printer, Instagram, Facebook, Twitter, Phone } from "lucide-react";
 
-// ============================================
-// FOOTER LINKS DATA
-// ============================================
-
-const shopLinks = [
-  { label: "Shop", href: "/shop" },
-  { label: "Custom Orders", href: "/custom" },
-  { label: "Bulk Services", href: "/bulk-services" },
-  { label: "Track Order", href: "/track-order" },
-];
-
-const legalLinks = [
-  { label: "Privacy Policy", href: "/privacy" },
-  { label: "Terms of Service", href: "/terms" },
-  { label: "Refund Policy", href: "/refunds" },
-];
-
-// ============================================
-// SITE FOOTER
-// ============================================
+const footerLinks = {
+  shop: [
+    { label: "All Products", href: "/shop" },
+    { label: "Custom Lamps", href: "/shop?category=lamps" },
+    { label: "Lithophanes", href: "/shop?category=lithophanes" },
+    { label: "3D Models", href: "/shop?category=models" },
+  ],
+  support: [
+    { label: "Contact Us", href: "/contact" },
+    { label: "Shipping Policy", href: "/shipping" },
+    { label: "Refund Policy", href: "/refunds" },
+    { label: "Track Order", href: "/track-order" },
+  ],
+  legal: [
+    { label: "Privacy Policy", href: "/privacy" },
+    { label: "Terms & Conditions", href: "/terms" },
+    { label: "Cookie Policy", href: "/cookies" },
+  ],
+};
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-white/10 bg-black">
-      {/* Main Footer Content */}
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-          {/* Column 1: Branding */}
-          <div className="space-y-4">
-            <Link href="/" className="flex items-center gap-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white">
-                <Printer className="h-5 w-5 text-black" />
+    <footer className="relative mt-20 border-t border-white/5 bg-black pt-16 pb-8 overflow-hidden">
+      {/* Subtle Background Glow */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+      <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-[500px] h-[200px] bg-white/5 blur-[120px] rounded-full pointer-events-none" />
+
+      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-12">
+          {/* Brand Section */}
+          <div className="lg:col-span-4 space-y-6">
+            <Link href="/" className="flex items-center gap-3 group">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white transition-transform duration-500 group-hover:scale-110">
+                <Printer className="h-6 w-6 text-black" />
               </div>
-              <span className="text-xl font-bold text-white">Z Axis Studio</span>
+              <div>
+                <span className="block text-xl font-bold tracking-tight text-white">Z Axis Studio</span>
+                <span className="block text-[10px] font-medium uppercase tracking-[0.2em] text-white/40">Mangaluru, India</span>
+              </div>
             </Link>
-            <p className="text-sm leading-relaxed text-white/60">
-              Precision 3D Printing & Design in Mangaluru. Bringing your ideas to
-              life, layer by layer.
+            <p className="max-w-xs text-sm leading-relaxed text-white/50">
+              Engineering art into reality. We create premium 3D printed masterpieces and personalized gifts that tell your unique story.
             </p>
+            <div className="flex items-center gap-4">
+              <Link href="#" className="h-10 w-10 flex items-center justify-center rounded-full border border-white/10 hover:border-white/20 hover:bg-white/5 transition-all text-white/60 hover:text-white">
+                <Instagram className="h-5 w-5" />
+              </Link>
+              <Link href="#" className="h-10 w-10 flex items-center justify-center rounded-full border border-white/10 hover:border-white/20 hover:bg-white/5 transition-all text-white/60 hover:text-white">
+                <Facebook className="h-5 w-5" />
+              </Link>
+              <Link href="#" className="h-10 w-10 flex items-center justify-center rounded-full border border-white/10 hover:border-white/20 hover:bg-white/5 transition-all text-white/60 hover:text-white">
+                <Twitter className="h-5 w-5" />
+              </Link>
+            </div>
           </div>
 
-          {/* Column 2: Shop Links */}
-          <div>
-            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-white">
-              Shop
-            </h3>
-            <ul className="space-y-3">
-              {shopLinks.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-white/60 transition-colors hover:text-white"
-                  >
-                    {link.label}
-                  </Link>
+          {/* Links Sections */}
+          <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:col-span-8">
+            <div>
+              <h3 className="text-xs font-bold uppercase tracking-[0.15em] text-white mb-6">Shop</h3>
+              <ul className="space-y-4">
+                {footerLinks.shop.map((link) => (
+                  <li key={link.label}>
+                    <Link href={link.href} className="text-sm text-white/40 hover:text-white transition-colors duration-200">
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-xs font-bold uppercase tracking-[0.15em] text-white mb-6">Support</h3>
+              <ul className="space-y-4">
+                {footerLinks.support.map((link) => (
+                  <li key={link.label}>
+                    <Link href={link.href} className="text-sm text-white/40 hover:text-white transition-colors duration-200">
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="col-span-2 sm:col-span-1">
+              <h3 className="text-xs font-bold uppercase tracking-[0.15em] text-white mb-6">Contact</h3>
+              <ul className="space-y-4">
+                <li>
+                  <a href="mailto:hello@zaxisstudio.in" className="group flex items-center gap-3 text-sm text-white/40 hover:text-white transition-colors">
+                    <Mail className="h-4 w-4 text-white/20 group-hover:text-white transition-colors" />
+                    hello@zaxisstudio.in
+                  </a>
                 </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Column 3: Legal Links */}
-          <div>
-            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-white">
-              Legal
-            </h3>
-            <ul className="space-y-3">
-              {legalLinks.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-white/60 transition-colors hover:text-white"
-                  >
-                    {link.label}
-                  </Link>
+                <li>
+                  <a href="tel:+919483654329" className="group flex items-center gap-3 text-sm text-white/40 hover:text-white transition-colors">
+                    <Phone className="h-4 w-4 text-white/20 group-hover:text-white transition-colors" />
+                    +91 94836 54329
+                  </a>
                 </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Column 4: Contact */}
-          <div>
-            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-white">
-              Contact
-            </h3>
-            <ul className="space-y-3">
-              <li>
-                <a
-                  href="mailto:hello@zaxisstudio.in"
-                  className="flex items-center gap-2 text-sm text-white/60 transition-colors hover:text-white"
-                >
-                  <Mail className="h-4 w-4" />
-                  hello@zaxisstudio.in
-                </a>
-              </li>
-              <li className="flex items-start gap-2 text-sm text-white/60">
-                <MapPin className="mt-0.5 h-4 w-4 flex-shrink-0" />
-                <span>
-                  Mangaluru, Karnataka
-                  <br />
-                  India - 575001
-                </span>
-              </li>
-            </ul>
+                <li className="flex items-start gap-3 text-sm text-white/40">
+                  <MapPin className="h-4 w-4 mt-0.5 text-white/20" />
+                  <span>Mangaluru, KA, India</span>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Bottom Bar */}
-      <div className="border-t border-white/10">
-        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-          <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
-            <p className="text-sm text-white/40">
-              © {currentYear} Z Axis Studio. All rights reserved.
-            </p>
-            <p className="text-sm text-white/40">
-              Designed with ♥ in Mangaluru
-            </p>
+        {/* Bottom Section */}
+        <div className="mt-16 pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-6">
+          <p className="text-[11px] text-white/30 uppercase tracking-widest font-medium">
+            © {currentYear} Z Axis Studio. All rights reserved.
+          </p>
+          <div className="flex items-center gap-6">
+            {footerLinks.legal.map((link) => (
+              <Link key={link.label} href={link.href} className="text-[11px] text-white/30 hover:text-white uppercase tracking-widest font-medium transition-colors">
+                {link.label}
+              </Link>
+            ))}
           </div>
         </div>
       </div>
     </footer>
   );
 }
+
 
