@@ -181,7 +181,7 @@ export function PhotoboxForm({ product }: PhotoboxFormProps) {
                                 }}
                                 appearance={{
                                     label: "text-white/60 hover:text-white transition-colors",
-                                    button: "bg-white text-black hover:bg-white/90 ut-uploading:cursor-not-allowed",
+                                    button: "bg-white !text-black hover:bg-white/90 ut-uploading:cursor-not-allowed",
                                     allowedContent: "text-white/40",
                                     container: "border-0",
                                 }}
