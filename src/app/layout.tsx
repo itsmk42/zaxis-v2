@@ -7,6 +7,7 @@ import NextTopLoader from "nextjs-toploader";
 import { SchemaMarkup } from "@/components/seo/schema-markup";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -97,6 +98,9 @@ export default function RootLayout({
             zIndex={1600}
             shadow="0 0 10px #E11D48,0 0 5px #E11D48"
           />
+          {process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID && (
+            <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID} />
+          )}
           <Navbar />
           {children}
           <Footer />
