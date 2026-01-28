@@ -1,12 +1,12 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { Navbar } from "@/components/layout/navbar";
-import { Footer } from "@/components/layout/footer";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "sonner";
 import NextTopLoader from "nextjs-toploader";
 import { SchemaMarkup } from "@/components/seo/schema-markup";
+import { Navbar } from "@/components/layout/navbar";
+import { Footer } from "@/components/layout/footer";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -97,7 +97,9 @@ export default function RootLayout({
             zIndex={1600}
             shadow="0 0 10px #E11D48,0 0 5px #E11D48"
           />
+          <Navbar />
           {children}
+          <Footer />
           <Toaster />
         </body>
       </html>

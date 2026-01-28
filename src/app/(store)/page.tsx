@@ -91,21 +91,21 @@ export default function HomePage() {
             </Button>
           </div>
 
-          {/* Trust Indicators */}
-          <div className="mt-16 flex flex-wrap items-center justify-center gap-8 text-white/40">
-            <div className="flex items-center gap-2">
-              <span className="text-2xl font-bold text-white">500+</span>
-              <span className="text-sm">Happy Customers</span>
+          {/* Stats */}
+          <div className="mt-12 flex flex-col items-center gap-6 text-white/60 sm:flex-row sm:justify-center sm:gap-8 md:mt-16">
+            <div className="flex flex-col items-center gap-1 text-center">
+              <span className="text-2xl font-bold text-white sm:text-3xl">500+</span>
+              <span className="text-xs sm:text-sm">Happy Customers</span>
             </div>
-            <div className="h-8 w-px bg-white/10" />
-            <div className="flex items-center gap-2">
-              <span className="text-2xl font-bold text-white">4.9</span>
-              <span className="text-sm">★ Rating</span>
+            <div className="hidden h-12 w-px bg-white/10 sm:block" />
+            <div className="flex flex-col items-center gap-1 text-center">
+              <span className="text-2xl font-bold text-white sm:text-3xl">4.9</span>
+              <span className="text-xs sm:text-sm">★ Rating</span>
             </div>
-            <div className="h-8 w-px bg-white/10" />
-            <div className="flex items-center gap-2">
-              <span className="text-2xl font-bold text-white">GST</span>
-              <span className="text-sm">Compliant</span>
+            <div className="hidden h-12 w-px bg-white/10 sm:block" />
+            <div className="flex flex-col items-center gap-1 text-center">
+              <span className="text-2xl font-bold text-white sm:text-3xl">GST</span>
+              <span className="text-xs sm:text-sm">Compliant</span>
             </div>
           </div>
         </div>
