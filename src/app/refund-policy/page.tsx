@@ -53,7 +53,7 @@ export default function RefundPolicyPage() {
                             <strong className="text-white">To request a replacement or refund for damaged goods:</strong>
                         </p>
                         <ol className="list-decimal list-inside text-white/70 space-y-2 mb-4">
-                            <li>Email us at <strong className="text-white">support@zaxisstudio.in</strong> within 7 days of delivery</li>
+                            <li>Email us at <strong className="text-white">support@zaxisstudio.com</strong> within 7 days of delivery</li>
                             <li>Include your order number in the subject line</li>
                             <li>Provide an <strong className="text-amber-400">unboxing video</strong> showing the damaged/defective item</li>
                             <li>Include clear photos of the damage from multiple angles</li>
@@ -108,8 +108,8 @@ export default function RefundPolicyPage() {
                             For any refund or cancellation queries, please contact us at:
                         </p>
                         <ul className="list-none text-white/70 space-y-2 mt-4">
-                            <li><strong className="text-white">Email:</strong> support@zaxisstudio.in</li>
-                            <li><strong className="text-white">WhatsApp:</strong> +91 XXXXX XXXXX</li>
+                            <li><strong className="text-white">Email:</strong> support@zaxisstudio.com</li>
+                            <li><strong className="text-white">WhatsApp:</strong> +91 94836 54329</li>
                             <li><strong className="text-white">Business Hours:</strong> Monday - Saturday, 10 AM - 7 PM IST</li>
                         </ul>
                     </section>

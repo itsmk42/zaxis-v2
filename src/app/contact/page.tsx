@@ -69,8 +69,8 @@ export default function ContactPage() {
                                             </div>
                                             <div>
                                                 <p className="text-sm font-medium text-white/60">Phone</p>
-                                                <a href="tel:+91XXXXXXXXXX" className="text-white hover:text-white/80">
-                                                    +91 XXXXX XXXXX
+                                                <a href="tel:+919483654329" className="text-white hover:text-white/80">
+                                                    +91 94836 54329
                                                 </a>
                                             </div>
                                         </div>
@@ -81,8 +81,8 @@ export default function ContactPage() {
                                             </div>
                                             <div>
                                                 <p className="text-sm font-medium text-white/60">Email</p>
-                                                <a href="mailto:support@zaxisstudio.in" className="text-white hover:text-white/80">
-                                                    support@zaxisstudio.in
+                                                <a href="mailto:support@zaxisstudio.com" className="text-white hover:text-white/80">
+                                                    support@zaxisstudio.com
                                                 </a>
                                             </div>
                                         </div>
@@ -178,7 +178,7 @@ export default function ContactPage() {
                                         value={formData.phone}
                                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                                         className="border-white/20 bg-white/5 text-white placeholder:text-white/40"
-                                        placeholder="+91 XXXXX XXXXX"
+                                        placeholder="+91 94836 54329"
                                     />
                                 </div>
 

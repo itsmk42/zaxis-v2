@@ -109,7 +109,7 @@ export default function ShippingPolicyPage() {
                         <ul className="list-disc list-inside text-white/70 space-y-2 mb-4">
                             <li>You will receive a tracking number via email and SMS once your order ships</li>
                             <li>Track your order on the courier's website using the tracking number</li>
-                            <li>For any tracking issues, contact us at support@zaxisstudio.in</li>
+                            <li>For any tracking issues, contact us at support@zaxisstudio.com</li>
                         </ul>
                     </section>
 
@@ -170,7 +170,7 @@ export default function ShippingPolicyPage() {
                         <h2 className="text-2xl font-semibold text-white mb-4">11. Address Changes</h2>
                         <ul className="list-disc list-inside text-white/70 space-y-2 mb-4">
                             <li>Address can be changed within 2 hours of order placement</li>
-                            <li>Contact us immediately at support@zaxisstudio.in or WhatsApp</li>
+                            <li>Contact us immediately at support@zaxisstudio.com or WhatsApp</li>
                             <li>Once shipped, address cannot be changed</li>
                             <li>Incorrect addresses may result in return charges</li>
                         </ul>
@@ -182,8 +182,8 @@ export default function ShippingPolicyPage() {
                             For shipping-related queries:
                         </p>
                         <ul className="list-none text-white/70 space-y-2">
-                            <li><strong className="text-white">Email:</strong> support@zaxisstudio.in</li>
-                            <li><strong className="text-white">WhatsApp:</strong> +91 XXXXX XXXXX</li>
+                            <li><strong className="text-white">Email:</strong> support@zaxisstudio.com</li>
+                            <li><strong className="text-white">WhatsApp:</strong> +91 94836 54329</li>
                             <li><strong className="text-white">Business Hours:</strong> Monday - Saturday, 10 AM - 7 PM IST</li>
                         </ul>
                     </section>

@@ -6,13 +6,13 @@ export function SchemaMarkup() {
         "@graph": [
             {
                 "@type": ["LocalBusiness", "ProfessionalService"],
-                "@id": "https://zaxisstudio.in/#organization",
+                "@id": "https://zaxisstudio.com/#organization",
                 name: "Z Axis Studio",
                 alternateName: "Z Axis 3D Printing",
                 description: "Professional 3D Printing Service specializing in custom PLA, PETG, and Resin prints. We create lithophanes, personalized lamps, keychains, and custom 3D printed products.",
-                url: "https://zaxisstudio.in",
-                telephone: "+91-XXXXX-XXXXX",
-                email: "support@zaxisstudio.in",
+                url: "https://zaxisstudio.com",
+                telephone: "+91-9483654329",
+                email: "support@zaxisstudio.com",
                 priceRange: "₹500 - ₹10,000",
                 address: {
                     "@type": "PostalAddress",
@@ -106,18 +106,18 @@ export function SchemaMarkup() {
             },
             {
                 "@type": "WebSite",
-                "@id": "https://zaxisstudio.in/#website",
-                url: "https://zaxisstudio.in",
+                "@id": "https://zaxisstudio.com/#website",
+                url: "https://zaxisstudio.com",
                 name: "Z Axis Studio",
                 description: "Professional 3D Printing Service in India",
                 publisher: {
-                    "@id": "https://zaxisstudio.in/#organization",
+                    "@id": "https://zaxisstudio.com/#organization",
                 },
                 potentialAction: {
                     "@type": "SearchAction",
                     target: {
                         "@type": "EntryPoint",
-                        urlTemplate: "https://zaxisstudio.in/shop?search={search_term_string}",
+                        urlTemplate: "https://zaxisstudio.com/shop?search={search_term_string}",
                     },
                     "query-input": "required name=search_term_string",
                 },

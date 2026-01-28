@@ -156,7 +156,7 @@ export default function TermsPage() {
                         <h2 className="text-2xl font-semibold text-white mb-4">12. Dispute Resolution</h2>
                         <ul className="list-disc list-inside text-white/70 space-y-2 mb-4">
                             <li>We encourage resolving disputes amicably through direct communication</li>
-                            <li>Contact us at support@zaxisstudio.in for any concerns</li>
+                            <li>Contact us at support@zaxisstudio.com for any concerns</li>
                             <li>If unresolved, disputes will be settled through arbitration in Mangaluru</li>
                         </ul>
                     </section>
@@ -183,9 +183,9 @@ export default function TermsPage() {
                             For questions about these Terms of Service:
                         </p>
                         <ul className="list-none text-white/70 space-y-2">
-                            <li><strong className="text-white">Email:</strong> legal@zaxisstudio.in</li>
+                            <li><strong className="text-white">Email:</strong> legal@zaxisstudio.com</li>
                             <li><strong className="text-white">Address:</strong> Z Axis Studio, Mangaluru, Karnataka, India</li>
-                            <li><strong className="text-white">Phone:</strong> +91 XXXXX XXXXX</li>
+                            <li><strong className="text-white">Phone:</strong> +91 94836 54329</li>
                         </ul>
                     </section>
 

@@ -128,10 +128,10 @@ export default function BulkServicesPage() {
                 <p className="text-white">
                   ✉️ Email:{" "}
                   <a
-                    href="mailto:bulk@zaxisstudio.in"
+                    href="mailto:bulk@zaxisstudio.com"
                     className="text-white/70 hover:text-white hover:underline"
                   >
-                    bulk@zaxisstudio.in
+                    bulk@zaxisstudio.com
                   </a>
                 </p>
               </div>

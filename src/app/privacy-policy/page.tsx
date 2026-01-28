@@ -143,7 +143,7 @@ export default function PrivacyPolicyPage() {
                             <li>Withdraw consent for data processing</li>
                         </ul>
                         <p className="text-white/70">
-                            To exercise these rights, contact us at <strong className="text-white">privacy@zaxisstudio.in</strong>
+                            To exercise these rights, contact us at <strong className="text-white">privacy@zaxisstudio.com</strong>
                         </p>
                     </section>
 
@@ -186,9 +186,9 @@ export default function PrivacyPolicyPage() {
                             For questions about this Privacy Policy or our data practices:
                         </p>
                         <ul className="list-none text-white/70 space-y-2">
-                            <li><strong className="text-white">Email:</strong> privacy@zaxisstudio.in</li>
+                            <li><strong className="text-white">Email:</strong> privacy@zaxisstudio.com</li>
                             <li><strong className="text-white">Address:</strong> Z Axis Studio, Mangaluru, Karnataka, India</li>
-                            <li><strong className="text-white">Phone:</strong> +91 XXXXX XXXXX</li>
+                            <li><strong className="text-white">Phone:</strong> +91 94836 54329</li>
                         </ul>
                     </section>
 

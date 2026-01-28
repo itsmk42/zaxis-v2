@@ -125,7 +125,7 @@ export function CustomProjectForm() {
                     {...register("whatsappNumber")}
                     id="whatsappNumber"
                     type="tel"
-                    placeholder="+91 9876543210"
+                    placeholder="+91 94836 54329"
                     className="mt-2 border-white/20 bg-white/5 text-white placeholder:text-white/40"
                     disabled={isSubmitting}
                 />

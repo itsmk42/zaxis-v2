@@ -98,9 +98,9 @@ export function Footer() {
               <h3 className="text-xs font-bold uppercase tracking-[0.15em] text-white mb-6">Contact</h3>
               <ul className="space-y-4">
                 <li>
-                  <a href="mailto:hello@zaxisstudio.in" className="group flex items-center gap-3 text-sm text-white/40 hover:text-white transition-colors">
+                  <a href="mailto:hello@zaxisstudio.com" className="group flex items-center gap-3 text-sm text-white/40 hover:text-white transition-colors">
                     <Mail className="h-4 w-4 text-white/20 group-hover:text-white transition-colors" />
-                    hello@zaxisstudio.in
+                    hello@zaxisstudio.com
                   </a>
                 </li>
                 <li>

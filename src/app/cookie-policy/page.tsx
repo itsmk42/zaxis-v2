@@ -143,7 +143,7 @@ export default function CookiePolicyPage() {
                             If you have questions about our use of cookies:
                         </p>
                         <ul className="list-none text-white/70 space-y-2">
-                            <li><strong className="text-white">Email:</strong> privacy@zaxisstudio.in</li>
+                            <li><strong className="text-white">Email:</strong> privacy@zaxisstudio.com</li>
                             <li><strong className="text-white">Address:</strong> Z Axis Studio, Mangaluru, Karnataka, India</li>
                         </ul>
                     </section>

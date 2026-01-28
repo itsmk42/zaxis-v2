@@ -162,7 +162,7 @@ export async function createOrder(data: z.infer<typeof checkoutSchema>, clientIt
         // 3. Send Email Receipt
         try {
             await resend.emails.send({
-                from: 'Z Axis Studio <orders@zaxisstudio.in>',
+                from: 'Z Axis Studio <orders@zaxisstudio.com>',
                 to: email,
                 subject: `Order Confirmation - ${orderNumber}`,
                 react: OrderReceipt({

@@ -154,7 +154,7 @@ export function BulkQuoteForm() {
           >
             <Input
               {...register("whatsappNumber")}
-              placeholder="+91 98765 43210"
+              placeholder="+91 94836 54329"
               className={cn(inputStyles, errors.whatsappNumber && errorStyles)}
             />
           </FormField>

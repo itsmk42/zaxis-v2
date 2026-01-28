@@ -43,13 +43,13 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_IN",
-    url: "https://zaxisstudio.in",
+    url: "https://zaxisstudio.com",
     siteName: "Z Axis Studio",
     title: "Z Axis Studio | Premium 3D Printing Service in India",
     description: "Professional 3D Printing Service in India. Based in Mangaluru & Bangalore. We ship custom PLA, PETG, and Resin prints nationwide. Order Online.",
     images: [
       {
-        url: "https://zaxisstudio.in/og-image.jpg",
+        url: "https://zaxisstudio.com/og-image.jpg",
         width: 1200,
         height: 630,
         alt: "Z Axis Studio - Premium 3D Printing Service",
@@ -60,7 +60,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Z Axis Studio | Premium 3D Printing Service in India",
     description: "Professional 3D Printing Service in India. Based in Mangaluru & Bangalore. We ship custom PLA, PETG, and Resin prints nationwide.",
-    images: ["https://zaxisstudio.in/og-image.jpg"],
+    images: ["https://zaxisstudio.com/og-image.jpg"],
   },
   robots: {
     index: true,
