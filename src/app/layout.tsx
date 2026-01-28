@@ -5,6 +5,7 @@ import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "sonner";
+import NextTopLoader from "nextjs-toploader";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -40,6 +41,13 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en" className="dark">
         <body className={`${inter.variable} font-sans antialiased overflow-x-hidden`}>
+          <NextTopLoader
+            color="#E11D48"
+            height={3}
+            showSpinner={false}
+            speed={200}
+            shadow="0 0 10px #E11D48,0 0 5px #E11D48"
+          />
           {children}
           <Toaster />
         </body>
