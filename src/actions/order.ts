@@ -16,6 +16,8 @@ interface CartItemPayload {
     productId: string;
     quantity: number;
     productName?: string; // Optional context
+    customText?: string;
+    customFileUrl?: string;
 }
 
 async function calculateTotalFromItems(items: CartItemPayload[]) {
@@ -145,6 +147,10 @@ export async function createOrder(data: z.infer<typeof checkoutSchema>, clientIt
                         lineTotal: Number(item.price) * item.quantity,
                         gstRate: 18,
                         gstAmount: (Number(item.price) * item.quantity) * 0.18,
+                        customizations: {
+                            text: item.customText,
+                            fileUrl: item.customFileUrl
+                        }
                     }))
                 }
             },

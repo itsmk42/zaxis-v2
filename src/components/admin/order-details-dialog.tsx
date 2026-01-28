@@ -87,6 +87,30 @@ export function OrderDetailsDialog({ order }: { order: any }) {
                                             <td className="px-4 py-3">
                                                 <p className="font-medium text-white">{item.productName}</p>
                                                 <p className="text-xs text-white/50 capitalize">{item.productType.toLowerCase()}</p>
+                                                {/* Customization Details */}
+                                                {item.customizations && (
+                                                    <div className="mt-2 space-y-1 rounded bg-white/5 p-2 text-xs">
+                                                        {item.customizations.text && (
+                                                            <p className="text-white/80">
+                                                                <span className="opacity-50">Custom Text:</span>{" "}
+                                                                <span className="font-mono text-yellow-400">"{item.customizations.text}"</span>
+                                                            </p>
+                                                        )}
+                                                        {item.customizations.fileUrl && (
+                                                            <div className="flex items-center gap-2 pt-1">
+                                                                <span className="opacity-50">Image:</span>
+                                                                <a
+                                                                    href={item.customizations.fileUrl}
+                                                                    target="_blank"
+                                                                    rel="noopener noreferrer"
+                                                                    className="text-blue-400 hover:underline hover:text-blue-300"
+                                                                >
+                                                                    View Upload
+                                                                </a>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                )}
                                             </td>
                                             <td className="px-4 py-3 text-center">{item.quantity}</td>
                                             <td className="px-4 py-3 text-right">{formatPrice(Number(item.lineTotal))}</td>

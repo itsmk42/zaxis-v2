@@ -95,7 +95,9 @@ export function CheckoutForm() {
             const orderItems = items.map(i => ({
                 productId: i.productId,
                 quantity: i.quantity,
-                productName: i.productName
+                productName: i.productName,
+                customText: i.customText || undefined,
+                customFileUrl: i.customFileUrl || undefined
             }));
 
             const result = await createOrder(data, orderItems);
