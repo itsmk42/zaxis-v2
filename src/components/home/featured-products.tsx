@@ -48,8 +48,8 @@ export async function FeaturedProducts() {
   }));
 
   return (
-    <section className="bg-black py-24">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <section className="bg-black py-16 md:py-24">
+      <div className="mx-auto max-w-7xl px-4 py-6 md:px-12 md:py-16">
         {/* Section Header */}
         <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
           <div>
@@ -74,7 +74,7 @@ export async function FeaturedProducts() {
 
         {/* Products Grid */}
         {transformedProducts.length > 0 ? (
-          <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 md:gap-8">
             {transformedProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}

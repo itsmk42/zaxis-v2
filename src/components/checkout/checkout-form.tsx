@@ -10,8 +10,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { checkoutSchema, indianStates } from "@/lib/validators/checkout";
+import { cn } from "@/lib/utils";
 import { createOrder } from "@/actions/order";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
@@ -127,7 +127,7 @@ export function CheckoutForm() {
                         {/* 1. Name */}
                         <div>
                             <Label htmlFor="fullName" className="text-white/60">Full Name</Label>
-                            <Input {...form.register("fullName")} id="fullName" className="bg-black/50 border-white/10 text-white" placeholder="John Doe" />
+                            <Input {...form.register("fullName")} id="fullName" className="bg-black/50 border-white/10 text-white" />
                             {form.formState.errors.fullName && <p className="text-xs text-red-400 mt-1">{form.formState.errors.fullName.message}</p>}
                         </div>
 
@@ -135,12 +135,12 @@ export function CheckoutForm() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <Label htmlFor="phone" className="text-white/60">Phone Number</Label>
-                                <Input {...form.register("phone")} id="phone" className="bg-black/50 border-white/10 text-white" placeholder="9876543210" maxLength={10} />
+                                <Input {...form.register("phone")} id="phone" className="bg-black/50 border-white/10 text-white" maxLength={10} />
                                 {form.formState.errors.phone && <p className="text-xs text-red-400 mt-1">{form.formState.errors.phone.message}</p>}
                             </div>
                             <div>
                                 <Label htmlFor="email" className="text-white/60">Email</Label>
-                                <Input {...form.register("email")} id="email" type="email" className="bg-black/50 border-white/10 text-white" placeholder="john@example.com" />
+                                <Input {...form.register("email")} id="email" type="email" className="bg-black/50 border-white/10 text-white" />
                                 {form.formState.errors.email && <p className="text-xs text-red-400 mt-1">{form.formState.errors.email.message}</p>}
                             </div>
                         </div>
@@ -156,38 +156,36 @@ export function CheckoutForm() {
                                 id="pincode"
                                 className="bg-black/50 border-white/10 text-white"
                                 maxLength={6}
-                                placeholder="575001"
                             />
                             {form.formState.errors.pincode && <p className="text-xs text-red-400 mt-1">{form.formState.errors.pincode.message}</p>}
                         </div>
 
                         {/* 4. City & State (Autofilled) */}
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <Label htmlFor="city" className="text-white/60">City</Label>
                                 <Input
                                     {...form.register("city")}
                                     id="city"
                                     className={`bg-black/50 border-white/10 text-white ${isFetchingPincode ? 'opacity-50' : ''}`}
-                                    placeholder="Mangaluru"
                                 />
                                 {form.formState.errors.city && <p className="text-xs text-red-400 mt-1">{form.formState.errors.city.message}</p>}
                             </div>
                             <div>
                                 <Label htmlFor="state" className="text-white/60">State</Label>
-                                <Select
-                                    onValueChange={(val) => form.setValue("state", val as any)}
-                                    value={form.watch("state")}
+                                <select
+                                    {...form.register("state")}
+                                    id="state"
+                                    className={cn(
+                                        "flex h-10 w-full rounded-md border border-white/10 bg-black/50 px-3 py-2 text-sm text-white focus:border-white/20 focus:outline-none focus:ring-1 focus:ring-white/10 disabled:cursor-not-allowed disabled:opacity-50",
+                                        isFetchingPincode && "opacity-50"
+                                    )}
                                 >
-                                    <SelectTrigger className={`bg-black/50 border-white/10 text-white ${isFetchingPincode ? 'opacity-50' : ''}`}>
-                                        <SelectValue placeholder="Select State" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {indianStates.map((st) => (
-                                            <SelectItem key={st} value={st}>{st}</SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
+                                    <option value="" className="bg-zinc-900">Select State</option>
+                                    {indianStates.map((st) => (
+                                        <option key={st} value={st} className="bg-zinc-900">{st}</option>
+                                    ))}
+                                </select>
                                 {form.formState.errors.state && <p className="text-xs text-red-400 mt-1">{form.formState.errors.state.message}</p>}
                             </div>
                         </div>
@@ -195,20 +193,20 @@ export function CheckoutForm() {
                         {/* 5. House No */}
                         <div>
                             <Label htmlFor="addressLine1" className="text-white/60">House No / Building</Label>
-                            <Input {...form.register("addressLine1")} id="addressLine1" className="bg-black/50 border-white/10 text-white" placeholder="Flat 101, Galaxy Apts" />
+                            <Input {...form.register("addressLine1")} id="addressLine1" className="bg-black/50 border-white/10 text-white" />
                             {form.formState.errors.addressLine1 && <p className="text-xs text-red-400 mt-1">{form.formState.errors.addressLine1.message}</p>}
                         </div>
 
                         {/* 6. Street / Area */}
                         <div>
                             <Label htmlFor="addressLine2" className="text-white/60">Street / Area</Label>
-                            <Input {...form.register("addressLine2")} id="addressLine2" className="bg-black/50 border-white/10 text-white" placeholder="MG Road" />
+                            <Input {...form.register("addressLine2")} id="addressLine2" className="bg-black/50 border-white/10 text-white" />
                         </div>
 
                         {/* 7. Landmark */}
                         <div>
                             <Label htmlFor="landmark" className="text-white/60">Landmark (Optional)</Label>
-                            <Input {...form.register("landmark")} id="landmark" className="bg-black/50 border-white/10 text-white" placeholder="Near City Mall" />
+                            <Input {...form.register("landmark")} id="landmark" className="bg-black/50 border-white/10 text-white" />
                         </div>
 
                     </div>
@@ -274,7 +272,6 @@ export function CheckoutForm() {
                                     {...form.register("transactionId")}
                                     id="txnId"
                                     className="bg-gray-50 border-gray-300 text-black placeholder:text-gray-400"
-                                    placeholder="Enter 12-digit Ref No."
                                 />
                                 {form.formState.errors.transactionId && <p className="text-xs text-red-500 mt-1">{form.formState.errors.transactionId.message}</p>}
                             </div>

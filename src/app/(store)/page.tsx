@@ -43,7 +43,7 @@ export default function HomePage() {
         </div>
 
         {/* Hero Content */}
-        <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-4 py-8 text-center md:px-12 md:py-24">
+        <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-4 py-6 text-center md:px-12 md:py-16">
           {/* Badge */}
           <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 backdrop-blur-sm">
             <Sparkles className="h-4 w-4 text-amber-400" />
@@ -92,7 +92,7 @@ export default function HomePage() {
               size="lg"
               className="h-12 rounded-full border-white/20 bg-transparent px-8 text-base font-semibold text-white backdrop-blur-sm transition-all hover:border-white/40 hover:bg-white/10"
             >
-              <Link href="/custom-orders">
+              <Link href="/custom-project">
                 Start Custom Project
               </Link>
             </Button>

@@ -419,6 +419,11 @@ model Review {
 // BULK INQUIRIES - B2B Lead Capture
 // ============================================
 
+enum InquiryType {
+  BULK_CORPORATE      // Business/bulk orders
+  CUSTOM_INDIVIDUAL   // Individual custom projects
+}
+
 enum InquiryStatus {
   NEW           // Just submitted
   CONTACTED     // We've reached out
@@ -429,6 +434,9 @@ enum InquiryStatus {
 
 model BulkInquiry {
   id              String        @id @default(cuid())
+
+  // Inquiry Type
+  inquiryType     InquiryType   @default(BULK_CORPORATE)
 
   // Contact Details
   name            String

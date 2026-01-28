@@ -65,8 +65,16 @@
   }
   
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground overflow-x-hidden;
     font-feature-settings: "rlig" 1, "calt" 1;
+  }
+ 
+  h1 {
+    @apply text-3xl font-bold tracking-tight md:text-5xl lg:text-6xl;
+  }
+ 
+  h2 {
+    @apply text-2xl font-bold tracking-tight md:text-3xl lg:text-4xl;
   }
 
   /* Custom scrollbar for dark theme */
