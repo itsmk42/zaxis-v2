@@ -6,6 +6,8 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { auth } from "@clerk/nextjs/server";
 import { z } from "zod";
+import { resend } from "@/lib/resend";
+import OrderReceipt from "@/components/emails/order-receipt";
 
 // Helper to calculate totals (simplified logic - mirroring cart)
 // Ideally this should reuse a shared calculation utility
@@ -104,7 +106,7 @@ export async function createOrder(data: z.infer<typeof checkoutSchema>, clientIt
         const count = await prisma.order.count();
         const orderNumber = `ZA-${dateStr}-${(count + 1).toString().padStart(4, "0")}`;
 
-        await prisma.order.create({
+        const order = await prisma.order.create({
             data: {
                 orderNumber,
                 userId,
@@ -145,10 +147,50 @@ export async function createOrder(data: z.infer<typeof checkoutSchema>, clientIt
                         gstAmount: (Number(item.price) * item.quantity) * 0.18,
                     }))
                 }
+            },
+            include: {
+                items: true
             }
         });
 
-        // 3. Clear Cart
+        // 3. Send Email Receipt
+        try {
+            await resend.emails.send({
+                from: 'Z Axis Studio <orders@zaxisstudio.in>',
+                to: email,
+                subject: `Order Confirmation - ${orderNumber}`,
+                react: OrderReceipt({
+                    customerName: fullName,
+                    orderNumber: orderNumber,
+                    items: order.items.map(item => ({
+                        productName: item.productName,
+                        quantity: item.quantity,
+                        unitPrice: Number(item.unitPrice),
+                        lineTotal: Number(item.lineTotal),
+                    })),
+                    subtotal: Number(order.subtotal),
+                    totalGst: Number(order.totalGst),
+                    shippingCost: Number(order.shippingCost),
+                    grandTotal: Number(order.grandTotal),
+                    paymentMethod: paymentMethod,
+                    paymentStatus: order.status,
+                    shippingAddress: {
+                        name: fullName,
+                        line1: addressLine1,
+                        line2: addressLine2,
+                        city: city,
+                        state: state,
+                        pincode: pincode,
+                    },
+                }),
+            });
+            console.log(`✅ Order receipt email sent to ${email} for order ${orderNumber}`);
+        } catch (emailError) {
+            // Don't fail the order if email fails - just log it
+            console.error(`❌ Failed to send order receipt email for ${orderNumber}:`, emailError);
+        }
+
+        // 4. Clear Cart
         // Note: Client side must also clear. We'll return success to trigger that.
 
     } catch (error) {
