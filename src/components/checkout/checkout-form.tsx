@@ -117,7 +117,7 @@ export function CheckoutForm() {
     }
 
     return (
-        <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-8 lg:grid-cols-2">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-8 lg:grid lg:grid-cols-2">
             {/* LEFT COLUMN: Shipping Details */}
             <div className="space-y-6">
                 <div className="rounded-xl border border-white/10 bg-white/5 p-6">

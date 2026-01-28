@@ -38,7 +38,7 @@ async function getProducts() {
 
 function ProductGridSkeleton() {
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 md:gap-8">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 sm:gap-6 lg:gap-8">
       {Array.from({ length: 8 }).map((_, i) => (
         <div key={i} className="space-y-4">
           <Skeleton className="aspect-[4/5] w-full rounded-lg" />
@@ -92,7 +92,7 @@ async function ProductGrid() {
 export default function ShopPage() {
   return (
     <main className="min-h-screen bg-black pt-28">
-      <div className="mx-auto max-w-7xl px-6">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Page Header */}
         <div className="mb-12">
           <h1 className="text-4xl font-bold tracking-tight text-white md:text-5xl">
