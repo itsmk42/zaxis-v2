@@ -12,15 +12,8 @@ export default function HomePage() {
       <section className="relative min-h-screen overflow-hidden bg-black">
         {/* Background Image with Overlay */}
         <div className="absolute inset-0 z-0">
-          {/* Placeholder gradient - replace with actual image */}
-          <div
-            className="absolute inset-0 bg-gradient-to-br from-zinc-900 via-black to-zinc-900"
-            style={{
-              backgroundImage: `url('/images/hero-bg.jpg')`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-            }}
-          />
+          {/* Background gradient fallback */}
+          <div className="absolute inset-0 bg-gradient-to-br from-zinc-900 via-black to-zinc-900" />
           {/* Dark overlay for text readability */}
           <div className="absolute inset-0 bg-black/60" />
           {/* Gradient overlay for depth */}

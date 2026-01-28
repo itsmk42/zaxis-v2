@@ -62,7 +62,7 @@ export default async function CollectionsPage() {
 
                 {/* Collections Grid */}
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                    {collections.map((collection) => (
+                    {collections.map((collection, index) => (
                         <Link
                             key={collection.slug}
                             href={`/collections/${collection.slug}`}
@@ -72,6 +72,7 @@ export default async function CollectionsPage() {
                                 src={collection.image}
                                 alt={collection.name}
                                 fill
+                                priority={index === 0}
                                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                                 className="object-cover transition-transform duration-500 group-hover:scale-105"
                             />

@@ -51,12 +51,12 @@ export function ProductCard({ product, onAddToCart, className }: ProductCardProp
         )}
       >
         {/* Image Container - 4:5 Aspect Ratio */}
-        <div className="relative aspect-[4/5] overflow-hidden bg-zinc-800">
+        <div className="relative aspect-[4/5] overflow-hidden bg-gray-100">
           <Image
             src={primaryImage}
             alt={imageAlt}
             fill
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 33vw, 25vw"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
 
