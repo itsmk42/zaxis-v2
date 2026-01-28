@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { Search, ShoppingCart, Menu, X, User, Package } from "lucide-react";
@@ -31,9 +32,18 @@ export function Navbar() {
           <div className="flex h-16 items-center justify-between">
             {/* Left: Logo */}
             <Link href="/" className="flex items-center">
-              <span className="text-xl font-bold tracking-tight text-white">
-                Z Axis Studio
-              </span>
+              <div className="flex items-center gap-2">
+                <Image
+                  src="/icon"
+                  alt="Z Axis Logo"
+                  width={32}
+                  height={32}
+                  className="rounded-md"
+                />
+                <span className="hidden text-xl font-bold tracking-tight text-white md:block">
+                  Axis Studio
+                </span>
+              </div>
             </Link>
 
             {/* Center: Navigation Links (Desktop) */}

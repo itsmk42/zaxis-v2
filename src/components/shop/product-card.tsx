@@ -42,16 +42,16 @@ export function ProductCard({ product, onAddToCart, className }: ProductCardProp
   };
 
   return (
-    <Link href={`/shop/${slug}`} className="group block">
+    <Link href={`/shop/${slug}`} className="group block h-full">
       <Card
         className={cn(
-          "w-full overflow-hidden border-white/10 bg-zinc-900/50 transition-all duration-300",
+          "flex h-full flex-col overflow-hidden border-white/10 bg-zinc-900/50 transition-all duration-300",
           "hover:border-white/20 hover:bg-zinc-900/80 hover:shadow-xl hover:shadow-black/20",
           className
         )}
       >
-        {/* Image Container - 4:5 Aspect Ratio */}
-        <div className="relative aspect-[4/5] overflow-hidden bg-gray-100">
+        {/* Image Container - Square Aspect Ratio */}
+        <div className="relative aspect-square w-full overflow-hidden bg-gray-100">
           <Image
             src={primaryImage}
             alt={imageAlt}
@@ -78,7 +78,7 @@ export function ProductCard({ product, onAddToCart, className }: ProductCardProp
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
         </div>
 
-        <CardContent className="p-4">
+        <CardContent className="flex flex-1 flex-col p-4">
           {/* Category */}
           {category && (
             <p className="mb-1 text-xs font-medium uppercase tracking-wider text-white/40">
@@ -87,7 +87,7 @@ export function ProductCard({ product, onAddToCart, className }: ProductCardProp
           )}
 
           {/* Product Name */}
-          <h3 className="line-clamp-2 text-base font-medium text-white transition-colors group-hover:text-white/90">
+          <h3 className="line-clamp-1 text-base font-medium text-white transition-colors group-hover:text-white/90">
             {name}
           </h3>
 
@@ -104,7 +104,7 @@ export function ProductCard({ product, onAddToCart, className }: ProductCardProp
           </div>
         </CardContent>
 
-        <CardFooter className="p-4 pt-0">
+        <CardFooter className="mt-auto p-4 pt-0">
           {/* Smart Action Button */}
           {isCustomProduct ? (
             <Button
