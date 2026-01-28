@@ -5,30 +5,7 @@ import { HeartHandshake, Leaf, Wrench, Shield, Clock, Award } from "lucide-react
 // ============================================
 
 const features = [
-  {
-    title: "Local Mangaluru Support",
-    description:
-      "We're real people, not bots. Get personalized support via WhatsApp from our team right here in Mangaluru.",
-    icon: HeartHandshake,
-    color: "text-blue-400",
-    bgColor: "bg-blue-500/10",
-  },
-  {
-    title: "Eco-Friendly Materials",
-    description:
-      "We use biodegradable PLA and sustainable practices. Beautiful prints that don't cost the earth.",
-    icon: Leaf,
-    color: "text-green-400",
-    bgColor: "bg-green-500/10",
-  },
-  {
-    title: "Custom Engineering",
-    description:
-      "We don't just print—we design. Our team can help engineer custom solutions for your unique needs.",
-    icon: Wrench,
-    color: "text-amber-400",
-    bgColor: "bg-amber-500/10",
-  },
+
   {
     title: "Quality Guaranteed",
     description:
