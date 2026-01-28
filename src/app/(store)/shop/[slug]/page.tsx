@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { formatPrice } from "@/lib/format";
 import { ImageGallery } from "@/components/product/image-gallery";
 import { ProductForm } from "@/components/product/product-form";
+import { PhotoboxForm } from "@/components/product/photobox-form";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 
@@ -190,17 +191,28 @@ export default async function ProductPage({ params }: ProductPageProps) {
             )}
 
             {/* Product Form with Customization */}
-            <ProductForm
-              product={{
-                id: product.id,
-                slug: product.slug,
-                name,
-                productType,
-                basePrice,
-                image: images[0]?.url || null,
-                customizationAttributes,
-              }}
-            />
+            {product.slug === "make-my-photobox" ? (
+              <PhotoboxForm
+                product={{
+                  id: product.id,
+                  name: name,
+                  slug: product.slug,
+                  image: images[0]?.url || null,
+                }}
+              />
+            ) : (
+              <ProductForm
+                product={{
+                  id: product.id,
+                  slug: product.slug,
+                  name,
+                  productType,
+                  basePrice,
+                  image: images[0]?.url || null,
+                  customizationAttributes,
+                }}
+              />
+            )}
 
             <Separator className="bg-white/10" />
 

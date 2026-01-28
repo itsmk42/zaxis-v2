@@ -86,7 +86,7 @@ export const ourFileRouter = {
   // ----------------------------------------
   customerUpload: f({
     image: {
-      maxFileSize: "8MB",
+      maxFileSize: "16MB",
       maxFileCount: 5,
     },
     blob: {
