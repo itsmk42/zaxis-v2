@@ -5,7 +5,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "sonner";
 import NextTopLoader from "nextjs-toploader";
 import { SchemaMarkup } from "@/components/seo/schema-markup";
-import { Navbar } from "@/components/layout/navbar";
+import { ConditionalNavbar } from "@/components/layout/conditional-navbar";
 import { Footer } from "@/components/layout/footer";
 import { GoogleAnalytics } from "@next/third-parties/google";
 
@@ -101,7 +101,7 @@ export default function RootLayout({
           {process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID && (
             <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID} />
           )}
-          <Navbar />
+          <ConditionalNavbar />
           {children}
           <Footer />
           <Toaster />
