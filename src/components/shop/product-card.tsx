@@ -33,7 +33,7 @@ export function ProductCard({ product, onAddToCart, className }: ProductCardProp
   const imageAlt = images[0]?.alt || name;
   const hasDiscount = compareAtPrice && compareAtPrice > basePrice;
 
-  const isCustomProduct = productType === "CUSTOM";
+  const isCustomProduct = productType === "CUSTOM" || slug === "make-my-photobox" || slug === "keychain-pet-tag";
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -110,10 +110,10 @@ export function ProductCard({ product, onAddToCart, className }: ProductCardProp
             <Button
               variant="outline"
               className="w-full border-white/20 bg-transparent text-white hover:bg-white/10 hover:text-white"
-              onClick={(e) => e.stopPropagation()}
+            // Allow click to bubble up to parent Link
             >
               <Palette className="mr-2 h-4 w-4" />
-              Customize
+              Customise
             </Button>
           ) : (
             <Button

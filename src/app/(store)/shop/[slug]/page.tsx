@@ -6,6 +6,7 @@ import { formatPrice } from "@/lib/format";
 import { ImageGallery } from "@/components/product/image-gallery";
 import { ProductForm } from "@/components/product/product-form";
 import { PhotoboxForm } from "@/components/product/photobox-form";
+import { KeychainForm } from "@/components/product/keychain-form";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 
@@ -163,9 +164,12 @@ export default async function ProductPage({ params }: ProductPageProps) {
             {/* Price */}
             <div className="flex items-baseline gap-3">
               <span className="text-3xl font-bold text-white">
-                {formatPrice(basePrice)}
+                {product.slug === "make-my-photobox"
+                  ? "₹999 - ₹1,999"
+                  : formatPrice(basePrice)
+                }
               </span>
-              {hasDiscount && (
+              {hasDiscount && product.slug !== "make-my-photobox" && (
                 <>
                   <span className="text-xl text-white/40 line-through">
                     {formatPrice(compareAtPrice)}
@@ -198,6 +202,16 @@ export default async function ProductPage({ params }: ProductPageProps) {
                   name: name,
                   slug: product.slug,
                   image: images[0]?.url || null,
+                }}
+              />
+            ) : product.slug === "keychain-pet-tag" ? (
+              <KeychainForm
+                product={{
+                  id: product.id,
+                  name: name,
+                  slug: product.slug,
+                  image: images[0]?.url || null,
+                  basePrice: basePrice,
                 }}
               />
             ) : (

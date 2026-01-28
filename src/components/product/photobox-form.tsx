@@ -12,8 +12,9 @@ import { Label } from "@/components/ui/label";
 import { useCart } from "@/hooks/use-cart";
 import { formatPrice } from "@/lib/format";
 import { toast } from "sonner";
-import { Loader2, X } from "lucide-react";
+import { Loader2, X, MessageCircle } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 const photoboxSchema = z.object({
     variant: z.enum(["keychain", "box_no_led", "box_with_led"]),
@@ -52,6 +53,7 @@ interface PhotoboxFormProps {
 export function PhotoboxForm({ product }: PhotoboxFormProps) {
     const [isUploading, setIsUploading] = useState(false);
     const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+    const [isCustomizing, setIsCustomizing] = useState(false);
     const { addItem } = useCart();
 
     const form = useForm<PhotoboxFormValues>({
@@ -92,8 +94,33 @@ export function PhotoboxForm({ product }: PhotoboxFormProps) {
         form.setValue("image", "");
     };
 
+    if (!isCustomizing) {
+        return (
+            <Button
+                onClick={() => setIsCustomizing(true)}
+                size="lg"
+                className="w-full bg-white text-black hover:bg-white/90 font-bold text-lg h-14"
+            >
+                Customise Now
+            </Button>
+        );
+    }
+
+
     return (
-        <div className="space-y-6 rounded-xl border border-white/10 bg-white/5 p-6">
+        <div className="space-y-6 rounded-xl border border-white/10 bg-white/5 p-6 animate-in fade-in slide-in-from-top-4 duration-300">
+            <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold text-white">Customize Your Box</h3>
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setIsCustomizing(false)}
+                    className="text-white/40 hover:text-white"
+                >
+                    <X className="h-4 w-4" />
+                </Button>
+            </div>
+
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                 {/* Variants */}
                 <div className="space-y-4">
@@ -107,8 +134,8 @@ export function PhotoboxForm({ product }: PhotoboxFormProps) {
                             <div
                                 key={variant.id}
                                 className={`relative flex cursor-pointer items-center justify-between rounded-lg border p-4 transition-all hover:bg-white/5 ${selectedVariantId === variant.id
-                                        ? "border-rose-500 bg-rose-500/10"
-                                        : "border-white/10"
+                                    ? "border-rose-500 bg-rose-500/10"
+                                    : "border-white/10"
                                     }`}
                                 onClick={() => form.setValue("variant", variant.id as any)}
                             >
@@ -214,6 +241,22 @@ export function PhotoboxForm({ product }: PhotoboxFormProps) {
                     ) : (
                         `Add to Cart - ${formatPrice(selectedVariant.price)}`
                     )}
+                </Button>
+
+                {/* WhatsApp Help */}
+                <Button
+                    asChild
+                    size="lg"
+                    className="w-full bg-green-600 hover:bg-green-700 text-white font-bold text-lg h-14"
+                >
+                    <Link
+                        href="https://wa.me/91XXXXXXXXXX?text=Hi,%20I%20am%20having%20trouble%20ordering%20the%20Photobox."
+                        target="_blank"
+                        className="flex items-center justify-center gap-2"
+                    >
+                        <MessageCircle className="h-5 w-5" />
+                        Having trouble ordering? Talk to us
+                    </Link>
                 </Button>
             </form>
         </div>
